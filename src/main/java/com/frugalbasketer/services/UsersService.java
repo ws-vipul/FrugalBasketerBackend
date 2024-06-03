@@ -5,8 +5,10 @@ import com.frugalbasketer.model.responsemodel.ResponseModel;
 
 public interface UsersService {
 
-    public ResponseModel getAllUsers(final int userId);
+    public ResponseModel getUserDetails(final int userId);
 
     public ResponseModel registerUser(final UserRegistrationRequestModel userRegistrationRequestModel);
 
+    public ResponseModel getAllUsers();
+    public ResponseModel deleteUser(final int userId);
 }

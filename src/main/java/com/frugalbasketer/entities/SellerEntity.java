@@ -38,4 +38,6 @@ public class SellerEntity {
     private String city;
     @Column
     private String password;
+    @Column
+    private String sellerStatus;
 }

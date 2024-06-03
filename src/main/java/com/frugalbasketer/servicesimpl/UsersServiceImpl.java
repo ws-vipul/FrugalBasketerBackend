@@ -11,6 +11,7 @@ import com.frugalbasketer.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -22,7 +23,7 @@ public class UsersServiceImpl implements UsersService {
 
     static Logger log = Logger.getLogger(UsersServiceImpl.class.getName());
     @Override
-    public ResponseModel getAllUsers(final int userId) {
+    public ResponseModel getUserDetails(final int userId) {
 
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if (userEntity.isEmpty()) {
@@ -49,9 +50,10 @@ public class UsersServiceImpl implements UsersService {
                     .firstName(userRegistrationRequestModel.getFirstName())
                     .lastName(userRegistrationRequestModel.getLastName())
                     .email(userRegistrationRequestModel.getEmail())
-                    .mobNum(userRegistrationRequestModel.getEmail())
+                    .mobNum(userRegistrationRequestModel.getMobNum())
                     .gender(userRegistrationRequestModel.getGender())
                     .city(userRegistrationRequestModel.getCity())
+                    .password(userRegistrationRequestModel.getPassword())
                     .userStatus(StatusConstants.ACTIVE).build());
 
             return ResponseModel.builder()
@@ -60,7 +62,7 @@ public class UsersServiceImpl implements UsersService {
                             .firstName(userRegistrationRequestModel.getFirstName())
                             .lastName(userRegistrationRequestModel.getLastName())
                             .email(userRegistrationRequestModel.getEmail())
-                            .mobNum(userRegistrationRequestModel.getEmail())
+                            .mobNum(userRegistrationRequestModel.getMobNum())
                             .gender(userRegistrationRequestModel.getGender())
                             .city(userRegistrationRequestModel.getCity())
                             .userStatus(StatusConstants.ACTIVE).build())
@@ -73,5 +75,41 @@ public class UsersServiceImpl implements UsersService {
                     .build();
         }
 
+    }
+
+    @Override
+    public ResponseModel getAllUsers() {
+        List<UserEntity> users = userRepository.findAll();
+        if(!users.isEmpty()) {
+            return ResponseModel.builder()
+                    .status(StringConstants.SUCCESS)
+                    .payload(users)
+                    .build();
+        } else {
+            return ResponseModel.builder()
+                    .status(StringConstants.FAILED)
+                    .message("No Users Found")
+                    .build();
+        }
+    }
+
+    @Override
+    public ResponseModel deleteUser(int userId) {
+
+        Optional<UserEntity> userEntity= userRepository.findById(userId);
+        if(userEntity.isPresent()) {
+            //Soft deleting user account
+            userEntity.get().setUserStatus(StatusConstants.DELETE);
+            userRepository.save(userEntity.get());
+            return ResponseModel.builder()
+                    .status(StringConstants.SUCCESS)
+                    .message("Deleted User Successfully")
+                    .build();
+        } else {
+            return ResponseModel.builder()
+                    .status(StringConstants.FAILED)
+                    .message("No User Found, Can't Delete")
+                    .build();
+        }
     }
 }

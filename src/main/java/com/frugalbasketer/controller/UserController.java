@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,18 @@ public class UserController {
 
     @GetMapping(ApiConstants.FETCH_USER_DETAILS)
     public ResponseModel fetchUserDetails(@PathVariable("userid") int userId){
-        return usersService.getAllUsers(userId);
+        return usersService.getUserDetails(userId);
     };
+
+    @GetMapping(ApiConstants.FETCH_ALL_USERS)
+    public ResponseModel fetchUserDetails(){
+        return usersService.getAllUsers();
+    };
+
+    @PutMapping(ApiConstants.DELETE_USER)
+    public ResponseModel deleteUser(@PathVariable("userid") int userId){
+        return usersService.deleteUser(userId);
+    };
+
+
 }
