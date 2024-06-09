@@ -1,10 +1,9 @@
 package com.frugalbasketer.servicesimpl;
 
 import com.frugalbasketer.constants.StatusConstants;
-import com.frugalbasketer.constants.StringConstants;
 import com.frugalbasketer.entities.AdminEntity;
-import com.frugalbasketer.model.requestmodel.AdminRegistrationRequestModel;
-import com.frugalbasketer.model.responsemodel.ResponseModel;
+import com.frugalbasketer.entities.UserEntity;
+import com.frugalbasketer.model.requestmodel.dashboard.DashAdminRegistrationRequestModel;
 import com.frugalbasketer.repository.AdminRepository;
 import com.frugalbasketer.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,85 +14,84 @@ import java.util.Optional;
 public class AdminServiceImpl implements AdminService {
     @Autowired
     AdminRepository adminRepository;
+
     @Override
-    public ResponseModel getAdminDetails(int userId) {
+    public AdminEntity getAdminDetails(int userId) {
         Optional<AdminEntity> adminEntity = adminRepository.findById(userId);
-        if (adminEntity.isPresent()) {
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .payload(adminEntity.get())
-                    .build();
-        } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .payload(null)
-                    .build();
-        }
+        return adminEntity.orElse(null);
     }
 
     @Override
-    public ResponseModel registerAdmin(AdminRegistrationRequestModel adminRegistrationRequestModel) {
-        AdminEntity adminEntity = adminRepository.findByEmail(adminRegistrationRequestModel.getEmail());
+    public AdminEntity createAdmin(DashAdminRegistrationRequestModel dashAdminRegistrationRequestModel) {
+        AdminEntity adminEntity = adminRepository.findByEmail(dashAdminRegistrationRequestModel.getEmail());
 
-        if(adminEntity == null) {
-            adminRepository.save(AdminEntity.builder()
-                    .firstName(adminRegistrationRequestModel.getFirstName())
-                    .lastName(adminRegistrationRequestModel.getLastName())
-                    .email(adminRegistrationRequestModel.getEmail())
-                    .mobNum(adminRegistrationRequestModel.getMobNum())
-                    .password(adminRegistrationRequestModel.getPassword())
+        if (adminEntity == null) {
+            return adminRepository.save(AdminEntity.builder()
+                    .firstName(dashAdminRegistrationRequestModel.getFirstName())
+                    .lastName(dashAdminRegistrationRequestModel.getLastName())
+                    .email(dashAdminRegistrationRequestModel.getEmail())
+                    .mobNum(dashAdminRegistrationRequestModel.getMobNum())
+                    .password(dashAdminRegistrationRequestModel.getPassword())
                     .adminStatus(StatusConstants.ACTIVE).build());
 
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .payload(AdminEntity.builder()
-                            .firstName(adminRegistrationRequestModel.getFirstName())
-                            .lastName(adminRegistrationRequestModel.getLastName())
-                            .email(adminRegistrationRequestModel.getEmail())
-                            .mobNum(adminRegistrationRequestModel.getMobNum())
-                            .adminStatus(StatusConstants.ACTIVE).build())
-                    .build();
+        } else if (adminEntity.getAdminStatus().equalsIgnoreCase(StatusConstants.DELETE)) {
+            adminEntity.setAdminStatus(StatusConstants.ACTIVE);
+            return adminRepository.save(adminEntity);
         } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .payload(null)
-                    .message("THERE IS ALREADY AN ACTIVE ACCOUNT WITH THIS EMAIL ID")
-                    .build();
+            return null;
         }
     }
 
     @Override
-    public ResponseModel getAllAdmins() {
+    public List<AdminEntity> getAllAdmins() {
         List<AdminEntity> adminEntities = adminRepository.findAll();
-        if(!adminEntities.isEmpty()) {
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .payload(adminEntities)
-                    .build();
+        if (!adminEntities.isEmpty()) {
+            return adminEntities;
         } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .message("No Admins Found")
-                    .build();
+            return null;
         }
     }
 
     @Override
-    public ResponseModel deleteAdmin(int userId) {
-        Optional<AdminEntity> adminEntity= adminRepository.findById(userId);
-        if(adminEntity.isPresent()) {
+    public AdminEntity deleteAdmin(int adminId) {
+        Optional<AdminEntity> adminEntity = adminRepository.findById(adminId);
+        if (adminEntity.isPresent()) {
             //Soft deleting user account
             adminEntity.get().setAdminStatus(StatusConstants.DELETE);
-            adminRepository.save(adminEntity.get());
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .message("Deleted Admin Successfully")
-                    .build();
+            return adminRepository.save(adminEntity.get());
         } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .message("No Admin Found, Can't Delete")
-                    .build();
+            return null;
+        }
+    }
+
+    @Override
+    public List<AdminEntity> getAllActiveAdmin() {
+        List<AdminEntity> adminEntityList = adminRepository.findAllByAdminStatus(StatusConstants.ACTIVE);
+        if (!adminEntityList.isEmpty()) {
+            return adminEntityList;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getCountOfActiveAdmin() {
+        long userCount = adminRepository.countByAdminStatus(StatusConstants.ACTIVE);
+        return String.valueOf(userCount);
+    }
+
+    @Override
+    public AdminEntity updateAdmin(AdminEntity adminEntity) {
+        Optional<AdminEntity> adminToUpdate = adminRepository.findById(adminEntity.getId());
+        if (adminToUpdate.isPresent()) {
+            return adminRepository.save(AdminEntity.builder()
+                    .id(adminEntity.getId())
+                    .firstName(adminEntity.getFirstName())
+                    .lastName(adminEntity.getLastName())
+                    .email(adminEntity.getEmail())
+                    .mobNum(adminEntity.getMobNum()).build());
+        } else {
+            return null;
         }
     }
 }

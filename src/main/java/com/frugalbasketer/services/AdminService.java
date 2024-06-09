@@ -1,11 +1,17 @@
 package com.frugalbasketer.services;
 
-import com.frugalbasketer.model.requestmodel.AdminRegistrationRequestModel;
-import com.frugalbasketer.model.responsemodel.ResponseModel;
+import com.frugalbasketer.entities.AdminEntity;
+import com.frugalbasketer.entities.UserEntity;
+import com.frugalbasketer.model.requestmodel.dashboard.DashAdminRegistrationRequestModel;
+
+import java.util.List;
 
 public interface AdminService {
-    public ResponseModel getAdminDetails(final int userId);
-    public ResponseModel registerAdmin(final AdminRegistrationRequestModel adminRegistrationRequestModel);
-    public ResponseModel getAllAdmins();
-    public ResponseModel deleteAdmin(final int userId);
+    AdminEntity getAdminDetails(final int adminId);
+    AdminEntity createAdmin(final DashAdminRegistrationRequestModel dashAdminRegistrationRequestModel);
+    List<AdminEntity> getAllAdmins();
+    AdminEntity deleteAdmin(final int adminId);
+    List<AdminEntity> getAllActiveAdmin();
+    String getCountOfActiveAdmin();
+    AdminEntity updateAdmin(AdminEntity adminEntity);
 }

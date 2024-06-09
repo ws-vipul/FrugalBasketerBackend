@@ -1,15 +1,18 @@
 package com.frugalbasketer.services;
 
-import com.frugalbasketer.model.requestmodel.SellerRegistrationRequestModel;
-import com.frugalbasketer.model.requestmodel.UserRegistrationRequestModel;
-import com.frugalbasketer.model.responsemodel.ResponseModel;
+import com.frugalbasketer.entities.SellerEntity;
+import com.frugalbasketer.entities.UserEntity;
+import com.frugalbasketer.model.requestmodel.web.WebSellerRegistrationRequestModel;
+
+import java.util.List;
 
 public interface SellersService {
 
-    public ResponseModel getSellerDetails(final int userId);
-
-    public ResponseModel registerSeller(final SellerRegistrationRequestModel sellerRegistrationRequestModel);
-
-    public ResponseModel getAllSellers();
-    public ResponseModel deleteSeller(final int userId);
+    SellerEntity getSellerDetails(int sellerId);
+    SellerEntity createSeller(WebSellerRegistrationRequestModel webSellerRegistrationRequestModel);
+    List<SellerEntity> getAllSellers();
+    SellerEntity deleteSeller(int sellerId);
+    List<SellerEntity> getAllActiveSeller();
+    String getCountOfActiveSeller();
+    SellerEntity updateSeller(SellerEntity sellerEntity);
 }

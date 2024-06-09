@@ -1,10 +1,8 @@
 package com.frugalbasketer.servicesimpl;
 
 import com.frugalbasketer.constants.StatusConstants;
-import com.frugalbasketer.constants.StringConstants;
 import com.frugalbasketer.entities.UserEntity;
-import com.frugalbasketer.model.requestmodel.UserRegistrationRequestModel;
-import com.frugalbasketer.model.responsemodel.ResponseModel;
+import com.frugalbasketer.model.requestmodel.web.WebUserRegistrationRequestModel;
 import com.frugalbasketer.repository.UserRepository;
 import com.frugalbasketer.services.UsersService;
 
@@ -23,93 +21,92 @@ public class UsersServiceImpl implements UsersService {
 
     static Logger log = Logger.getLogger(UsersServiceImpl.class.getName());
     @Override
-    public ResponseModel getUserDetails(final int userId) {
+    public UserEntity getUserDetails(final int userId) {
 
         Optional<UserEntity> userEntity = userRepository.findById(userId);
-        if (userEntity.isEmpty()) {
-            log.info("user not found for user id "+userId);
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .payload(null)
-                    .build();
-        } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .payload(userEntity.get())
-                    .build();
-        }
+        return userEntity.orElse(null);
     }
 
     @Override
-    public ResponseModel registerUser(final UserRegistrationRequestModel userRegistrationRequestModel) {
+    public UserEntity createUser(final WebUserRegistrationRequestModel webUserRegistrationRequestModel) {
 
-        UserEntity userEntity= userRepository.findByEmail(userRegistrationRequestModel.getEmail());
+        UserEntity userEntity= userRepository.findByEmail(webUserRegistrationRequestModel.getEmail());
 
         if(userEntity == null) {
-            userRepository.save(UserEntity.builder()
-                    .firstName(userRegistrationRequestModel.getFirstName())
-                    .lastName(userRegistrationRequestModel.getLastName())
-                    .email(userRegistrationRequestModel.getEmail())
-                    .mobNum(userRegistrationRequestModel.getMobNum())
-                    .gender(userRegistrationRequestModel.getGender())
-                    .city(userRegistrationRequestModel.getCity())
-                    .password(userRegistrationRequestModel.getPassword())
+            return userRepository.save(UserEntity.builder()
+                    .firstName(webUserRegistrationRequestModel.getFirstName())
+                    .lastName(webUserRegistrationRequestModel.getLastName())
+                    .email(webUserRegistrationRequestModel.getEmail())
+                    .mobNum(webUserRegistrationRequestModel.getMobNum())
+                    .gender(webUserRegistrationRequestModel.getGender())
+                    .city(webUserRegistrationRequestModel.getCity())
+                    .password(webUserRegistrationRequestModel.getPassword())
                     .userStatus(StatusConstants.ACTIVE).build());
 
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .payload(UserEntity.builder()
-                            .firstName(userRegistrationRequestModel.getFirstName())
-                            .lastName(userRegistrationRequestModel.getLastName())
-                            .email(userRegistrationRequestModel.getEmail())
-                            .mobNum(userRegistrationRequestModel.getMobNum())
-                            .gender(userRegistrationRequestModel.getGender())
-                            .city(userRegistrationRequestModel.getCity())
-                            .userStatus(StatusConstants.ACTIVE).build())
-                    .build();
+        } else if(userEntity.getUserStatus().equalsIgnoreCase(StatusConstants.DELETE)){
+            userEntity.setUserStatus(StatusConstants.ACTIVE);
+            return userRepository.save(userEntity);
         } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .payload(null)
-                    .message("THERE IS ALREADY AN ACTIVE ACCOUNT WITH THIS EMAIL ID")
-                    .build();
+            return null;
         }
 
     }
 
     @Override
-    public ResponseModel getAllUsers() {
+    public List<UserEntity> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
         if(!users.isEmpty()) {
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .payload(users)
-                    .build();
+           return users;
         } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .message("No Users Found")
-                    .build();
+            return null;
         }
     }
 
     @Override
-    public ResponseModel deleteUser(int userId) {
+    public UserEntity deleteUser(int userId) {
 
         Optional<UserEntity> userEntity= userRepository.findById(userId);
         if(userEntity.isPresent()) {
             //Soft deleting user account
             userEntity.get().setUserStatus(StatusConstants.DELETE);
-            userRepository.save(userEntity.get());
-            return ResponseModel.builder()
-                    .status(StringConstants.SUCCESS)
-                    .message("Deleted User Successfully")
-                    .build();
+            return userRepository.save(userEntity.get());
         } else {
-            return ResponseModel.builder()
-                    .status(StringConstants.FAILED)
-                    .message("No User Found, Can't Delete")
-                    .build();
+            return null;
         }
     }
+
+    @Override
+    public List<UserEntity> getAllActiveUsers() {
+        List<UserEntity> userEntityList= userRepository.findAllByUserStatus(StatusConstants.ACTIVE);
+        if(!userEntityList.isEmpty()) {
+            return userEntityList;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getCountOfActiveUser() {
+        long userCount = userRepository.countByUserStatus(StatusConstants.ACTIVE);
+        return String.valueOf(userCount);
+    }
+
+    @Override
+    public UserEntity updateUser(UserEntity userEntity) {
+        Optional<UserEntity> userToUpdate = userRepository.findById(userEntity.getId());
+        if(userToUpdate.isPresent()) {
+            return userRepository.save(UserEntity.builder()
+                            .id(userEntity.getId())
+                            .firstName(userEntity.getFirstName())
+                            .lastName(userEntity.getLastName())
+                            .email(userEntity.getEmail())
+                            .mobNum(userEntity.getMobNum())
+                            .gender(userEntity.getGender())
+                            .city(userEntity.getCity())
+                    .build());
+        } else {
+            return null;
+        }
+    }
+
 }

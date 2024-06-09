@@ -1,14 +1,17 @@
 package com.frugalbasketer.services;
 
-import com.frugalbasketer.model.requestmodel.UserRegistrationRequestModel;
-import com.frugalbasketer.model.responsemodel.ResponseModel;
+import com.frugalbasketer.entities.UserEntity;
+import com.frugalbasketer.model.requestmodel.web.WebUserRegistrationRequestModel;
+
+import java.util.List;
 
 public interface UsersService {
 
-    public ResponseModel getUserDetails(final int userId);
-
-    public ResponseModel registerUser(final UserRegistrationRequestModel userRegistrationRequestModel);
-
-    public ResponseModel getAllUsers();
-    public ResponseModel deleteUser(final int userId);
+    UserEntity getUserDetails(final int userId);
+    UserEntity createUser(final WebUserRegistrationRequestModel webUserRegistrationRequestModel);
+    List<UserEntity> getAllUsers();
+    UserEntity deleteUser(final int userId);
+    List<UserEntity> getAllActiveUsers();
+    String getCountOfActiveUser();
+    UserEntity updateUser(UserEntity userEntity);
 }

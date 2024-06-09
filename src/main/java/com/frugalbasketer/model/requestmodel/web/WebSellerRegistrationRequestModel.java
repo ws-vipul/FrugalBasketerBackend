@@ -1,18 +1,12 @@
-package com.frugalbasketer.model.requestmodel;
+package com.frugalbasketer.model.requestmodel.web;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Builder
-public class UserRegistrationRequestModel {
+public class WebSellerRegistrationRequestModel {
 
     @JsonProperty("first_name")
     private String firstName;
@@ -26,13 +20,15 @@ public class UserRegistrationRequestModel {
     @JsonProperty("mob_num")
     private String mobNum;
 
-    @JsonProperty("gender")
-    private String gender;
+    @JsonProperty("shop_name")
+    private String shopName;
+
+    @JsonProperty("shop_address")
+    private String shopAddress;
 
     @JsonProperty("city")
     private String city;
 
     @JsonProperty("password")
     private String password;
-
 }
