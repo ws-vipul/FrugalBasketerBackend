@@ -10,4 +10,5 @@ public interface DashboardAdminService {
     ResponseModel deleteAdmin(DashDeleteAdminRequestModel dashDeleteAdminRequestModel);
     ResponseModel fetchAllAdmin();
     ResponseModel fetchAdminDetailsById(int adminId);
+    ResponseModel fetchAdminActivityLogs(int adminId);
 }

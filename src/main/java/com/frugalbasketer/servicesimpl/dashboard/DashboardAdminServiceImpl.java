@@ -100,4 +100,20 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
                     .build();
         }
     }
+
+    @Override
+    public ResponseModel fetchAdminActivityLogs(int adminId) {
+        List<AdminLogsEntity> adminLogsEntityList = adminLogsService.getAdminLogsByAdminId(adminId);
+        if(adminLogsEntityList != null) {
+            return ResponseModel.builder()
+                    .status(StringConstants.SUCCESS)
+                    .payload(adminLogsEntityList)
+                    .build();
+        } else {
+            return ResponseModel.builder()
+                    .status(StringConstants.FAILED)
+                    .message("No Admin Activity Logs Found")
+                    .build();
+        }
+    }
 }

@@ -7,10 +7,12 @@ import com.frugalbasketer.model.requestmodel.dashboard.DashAdminRegistrationRequ
 import com.frugalbasketer.repository.AdminRepository;
 import com.frugalbasketer.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
     AdminRepository adminRepository;
@@ -56,7 +58,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminEntity deleteAdmin(int adminId) {
         Optional<AdminEntity> adminEntity = adminRepository.findById(adminId);
         if (adminEntity.isPresent()) {
-            //Soft deleting user account
+            //Soft deleting admin account
             adminEntity.get().setAdminStatus(StatusConstants.DELETE);
             return adminRepository.save(adminEntity.get());
         } else {

@@ -8,6 +8,5 @@ public interface DashboardUserService {
     ResponseModel deleteUser(DashDeleteUserRequestModel dashDeleteUserRequestModel);
     ResponseModel fetchAllUsers();
     ResponseModel fetchUserDetailsById(int userId);
-
-
+    ResponseModel fetchUserActivityLogs(int userId);
 }

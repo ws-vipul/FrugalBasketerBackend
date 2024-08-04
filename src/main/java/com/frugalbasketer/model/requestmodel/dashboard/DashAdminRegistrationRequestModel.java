@@ -23,6 +23,6 @@ public class DashAdminRegistrationRequestModel {
     @JsonProperty("password")
     private String password;
 
-    @JsonProperty("adminId")
+    @JsonProperty("admin_id")
     private int adminId;
 }

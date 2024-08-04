@@ -9,7 +9,9 @@ import com.frugalbasketer.services.SellerLogsService;
 import com.frugalbasketer.services.SellersService;
 import com.frugalbasketer.services.web.WebSellerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class WebSellerServiceImpl implements WebSellerService {
 
     @Autowired

@@ -42,6 +42,11 @@ public class DashboardController {
         return dashboardUserService.fetchUserDetailsById(userId);
     };
 
+    @GetMapping(ApiConstants.GET_USER_LOGS)
+    public ResponseModel fetchUserActivityLogs(@PathVariable("userId") int userId) {
+        return dashboardUserService.fetchUserActivityLogs(userId);
+    }
+
     @PutMapping(ApiConstants.DASH_DELETE_SELLER)
     public ResponseModel deleteSeller(@RequestBody DashDeleteSellerRequestModel dashDeleteSellerRequestModel){
         return (dashboardSellerService.deleteSeller(dashDeleteSellerRequestModel));
@@ -56,6 +61,11 @@ public class DashboardController {
     public ResponseModel fetchSellerDetails(@PathVariable("sellerId") int sellerId){
         return dashboardSellerService.fetchSellerDetailsById(sellerId);
     };
+
+    @GetMapping(ApiConstants.GET_SELLER_ACTIVITY_LOGS)
+    public ResponseModel fetchSellerActivityLogs(@PathVariable("sellerId") int sellerId) {
+        return dashboardSellerService.fetchSellerActivityLogs(sellerId);
+    }
 
     @PostMapping(ApiConstants.DASH_REGISTER_ADMIN)
     public ResponseModel registerAdmin(@RequestBody final DashAdminRegistrationRequestModel dashAdminRegistrationRequestModel) {
@@ -77,6 +87,9 @@ public class DashboardController {
         return dashboardAdminService.deleteAdmin(dashDeleteAdminRequestModel);
     };
 
-
+    @GetMapping(ApiConstants.GET_ADMIN_ACTIVITY_LOGS)
+    public ResponseModel getAdminActivityLogs(@PathVariable("adminId") int adminId) {
+        return dashboardAdminService.fetchAdminActivityLogs(adminId);
+    }
 
 }

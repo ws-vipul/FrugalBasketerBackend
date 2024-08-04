@@ -10,7 +10,9 @@ import com.frugalbasketer.services.UserLogsService;
 import com.frugalbasketer.services.UsersService;
 import com.frugalbasketer.services.web.WebUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class WebUserServiceImpl implements WebUserService {
 
     @Autowired

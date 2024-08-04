@@ -3,9 +3,11 @@ package com.frugalbasketer.servicesimpl.dashboard;
 import com.frugalbasketer.constants.StringConstants;
 import com.frugalbasketer.entities.AdminLogsEntity;
 import com.frugalbasketer.entities.UserEntity;
+import com.frugalbasketer.entities.UserLogsEntity;
 import com.frugalbasketer.model.requestmodel.dashboard.DashDeleteUserRequestModel;
 import com.frugalbasketer.model.responsemodel.ResponseModel;
 import com.frugalbasketer.services.AdminLogsService;
+import com.frugalbasketer.services.UserLogsService;
 import com.frugalbasketer.services.UsersService;
 import com.frugalbasketer.services.dashboard.DashboardUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import java.util.List;
 public class DashboardUserServiceImpl implements DashboardUserService {
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private UserLogsService userLogsService;
     @Autowired
     private AdminLogsService adminLogsService;
 
@@ -76,6 +80,21 @@ public class DashboardUserServiceImpl implements DashboardUserService {
         }
     }
 
+    @Override
+    public ResponseModel fetchUserActivityLogs(final int userId) {
+        List<UserLogsEntity> userLogsEntityList= userLogsService.getUserLogsByUserId(userId);
+        if(!userLogsEntityList.isEmpty()) {
+            return ResponseModel.builder()
+                    .status(StringConstants.SUCCESS)
+                    .payload(userLogsEntityList)
+                    .build();
+        } else {
+            return ResponseModel.builder()
+                    .status(StringConstants.FAILED)
+                    .message("No User Activity Logs Found")
+                    .build();
+        }
 
+    }
 
 }

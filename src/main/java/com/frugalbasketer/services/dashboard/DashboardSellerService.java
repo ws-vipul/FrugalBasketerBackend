@@ -8,4 +8,5 @@ public interface DashboardSellerService {
     ResponseModel deleteSeller(DashDeleteSellerRequestModel dashDeleteSellerRequestModel);
     ResponseModel fetchAllSeller();
     ResponseModel fetchSellerDetailsById(int sellerId);
+    ResponseModel fetchSellerActivityLogs(int sellerId);
 }
