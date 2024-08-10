@@ -16,5 +16,11 @@ public class DashUpdateAdminRequestModel {
     private String email;
     @JsonProperty
     private String mobNum;
+    @JsonProperty
+    private String password;
+    @JsonProperty
+    private String adminId;
+    @JsonProperty
+    private String operatorAdmin;
 
 }

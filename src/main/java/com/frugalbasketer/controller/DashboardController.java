@@ -3,11 +3,13 @@ package com.frugalbasketer.controller;
 import com.frugalbasketer.constants.ApiConstants;
 import com.frugalbasketer.model.requestmodel.dashboard.DashAdminRegistrationRequestModel;
 import com.frugalbasketer.model.requestmodel.dashboard.DashDeleteAdminRequestModel;
-import com.frugalbasketer.model.requestmodel.dashboard.DashDeleteSellerRequestModel;
+import com.frugalbasketer.model.requestmodel.dashboard.DashDeleteOperatorRequestModel;
 import com.frugalbasketer.model.requestmodel.dashboard.DashDeleteUserRequestModel;
+import com.frugalbasketer.model.requestmodel.dashboard.DashSearchedAdminRequestModel;
+import com.frugalbasketer.model.requestmodel.dashboard.DashUpdateAdminRequestModel;
 import com.frugalbasketer.model.responsemodel.ResponseModel;
 import com.frugalbasketer.services.dashboard.DashboardAdminService;
-import com.frugalbasketer.services.dashboard.DashboardSellerService;
+import com.frugalbasketer.services.dashboard.DashboardOperatorService;
 import com.frugalbasketer.services.dashboard.DashboardUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,7 @@ public class DashboardController {
     @Autowired
     DashboardAdminService dashboardAdminService;
     @Autowired
-    DashboardSellerService dashboardSellerService;
+    DashboardOperatorService dashboardOperatorService;
 
     @PutMapping(ApiConstants.DASH_DELETE_USER)
     public ResponseModel deleteUser(@RequestBody DashDeleteUserRequestModel dashDeleteUserRequestModel){
@@ -47,29 +49,34 @@ public class DashboardController {
         return dashboardUserService.fetchUserActivityLogs(userId);
     }
 
-    @PutMapping(ApiConstants.DASH_DELETE_SELLER)
-    public ResponseModel deleteSeller(@RequestBody DashDeleteSellerRequestModel dashDeleteSellerRequestModel){
-        return (dashboardSellerService.deleteSeller(dashDeleteSellerRequestModel));
+    @PutMapping(ApiConstants.DASH_DELETE_OPERATOR)
+    public ResponseModel deleteOperator(@RequestBody DashDeleteOperatorRequestModel dashDeleteOperatorRequestModel){
+        return (dashboardOperatorService.deleteOperator(dashDeleteOperatorRequestModel));
     };
 
-    @GetMapping(ApiConstants.DASH_FETCH_ALL_SELLERS)
-    public ResponseModel fetchSellerDetails(){
-        return dashboardSellerService.fetchAllSeller();
+    @GetMapping(ApiConstants.DASH_FETCH_ALL_OPERATORS)
+    public ResponseModel fetchOperatorDetails(){
+        return dashboardOperatorService.fetchAllOperator();
     };
 
-    @GetMapping(ApiConstants.DASH_FETCH_SELLERS_DETAILS)
-    public ResponseModel fetchSellerDetails(@PathVariable("sellerId") int sellerId){
-        return dashboardSellerService.fetchSellerDetailsById(sellerId);
+    @GetMapping(ApiConstants.DASH_FETCH_OPERATORS_DETAILS)
+    public ResponseModel fetchOperatorDetails(@PathVariable("operatorId") int operatorId){
+        return dashboardOperatorService.fetchOperatorDetailsById(operatorId);
     };
 
-    @GetMapping(ApiConstants.GET_SELLER_ACTIVITY_LOGS)
-    public ResponseModel fetchSellerActivityLogs(@PathVariable("sellerId") int sellerId) {
-        return dashboardSellerService.fetchSellerActivityLogs(sellerId);
+    @GetMapping(ApiConstants.GET_OPERATOR_ACTIVITY_LOGS)
+    public ResponseModel fetchOperatorActivityLogs(@PathVariable("operatorId") int operatorId) {
+        return dashboardOperatorService.fetchOperatorActivityLogs(operatorId);
     }
 
     @PostMapping(ApiConstants.DASH_REGISTER_ADMIN)
     public ResponseModel registerAdmin(@RequestBody final DashAdminRegistrationRequestModel dashAdminRegistrationRequestModel) {
         return dashboardAdminService.registerAdmin(dashAdminRegistrationRequestModel);
+    };
+
+    @PutMapping(ApiConstants.DASH_UPDATE_ADMIN)
+    public ResponseModel updateAdmin(@RequestBody final DashUpdateAdminRequestModel dashUpdateAdminRequestModel) {
+        return dashboardAdminService.updateAdmin(dashUpdateAdminRequestModel);
     };
 
     @GetMapping(ApiConstants.DASH_FETCH_ADMIN_DETAILS)
@@ -90,6 +97,16 @@ public class DashboardController {
     @GetMapping(ApiConstants.GET_ADMIN_ACTIVITY_LOGS)
     public ResponseModel getAdminActivityLogs(@PathVariable("adminId") int adminId) {
         return dashboardAdminService.fetchAdminActivityLogs(adminId);
+    }
+
+    @GetMapping(ApiConstants.FETCH_ADMIN_FOR_TERM)
+    public ResponseModel fetchSearchedAdmin(DashSearchedAdminRequestModel dashSearchedAdminRequestModel) {
+        return dashboardAdminService.fetchAllAdminSearchedFor(dashSearchedAdminRequestModel);
+    }
+
+    @GetMapping(ApiConstants.EXPORT_ADMIN_DATA)
+    public ResponseModel exportAdminsData() {
+        return dashboardAdminService.fetchAllAdmin();
     }
 
 }

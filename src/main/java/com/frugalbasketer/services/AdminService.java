@@ -10,6 +10,7 @@ public interface AdminService {
     AdminEntity getAdminDetails(final int adminId);
     AdminEntity createAdmin(final DashAdminRegistrationRequestModel dashAdminRegistrationRequestModel);
     List<AdminEntity> getAllAdmins();
+    List<AdminEntity> getAllAdminsForTerm(final String term, final String searchFor);
     AdminEntity deleteAdmin(final int adminId);
     List<AdminEntity> getAllActiveAdmin();
     String getCountOfActiveAdmin();

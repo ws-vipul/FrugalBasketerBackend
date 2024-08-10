@@ -6,12 +6,10 @@ import lombok.Data;
 
 @Builder
 @Data
-public class DashDeleteSellerRequestModel {
+public class DashSearchedAdminRequestModel {
+    @JsonProperty
+    private String term;
+    @JsonProperty
+    private String searchFor;
 
-    @JsonProperty
-    private int sellerId;
-    @JsonProperty
-    private int adminId;
-    @JsonProperty
-    private String reason;
 }

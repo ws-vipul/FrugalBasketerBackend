@@ -29,7 +29,7 @@ public class ProductEntity {
     @Column
     private String productQuantity;
     @Column
-    private String productSellerId;
+    private String productOperatorId;
     @Column
     private String productDescription;
     @Column

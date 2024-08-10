@@ -1,6 +1,6 @@
 package com.frugalbasketer.servicesimpl;
 
-import com.frugalbasketer.entities.SellersLogsEntity;
+import com.frugalbasketer.entities.OperatorsLogsEntity;
 import com.frugalbasketer.entities.UserLogsEntity;
 import com.frugalbasketer.repository.UsersLogsRepository;
 import com.frugalbasketer.services.UserLogsService;

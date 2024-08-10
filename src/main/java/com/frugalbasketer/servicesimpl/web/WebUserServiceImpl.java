@@ -1,7 +1,7 @@
 package com.frugalbasketer.servicesimpl.web;
 
 import com.frugalbasketer.constants.StringConstants;
-import com.frugalbasketer.entities.SellersLogsEntity;
+import com.frugalbasketer.entities.OperatorsLogsEntity;
 import com.frugalbasketer.entities.UserEntity;
 import com.frugalbasketer.entities.UserLogsEntity;
 import com.frugalbasketer.model.requestmodel.web.WebUserRegistrationRequestModel;

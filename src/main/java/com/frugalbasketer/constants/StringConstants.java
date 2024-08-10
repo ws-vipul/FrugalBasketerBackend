@@ -20,5 +20,12 @@ public class StringConstants {
     public static final String UPDATED = "updated";
     public static final String SEARCHED = "searched";
 
+    //Entity Fields
+
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String MOBILE_NUMBER = "mobile_number";
+    public static final String EMAIL = "email";
+
 
 }

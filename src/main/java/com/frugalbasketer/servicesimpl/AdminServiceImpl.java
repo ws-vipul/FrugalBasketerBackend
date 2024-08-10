@@ -1,6 +1,7 @@
 package com.frugalbasketer.servicesimpl;
 
 import com.frugalbasketer.constants.StatusConstants;
+import com.frugalbasketer.constants.StringConstants;
 import com.frugalbasketer.entities.AdminEntity;
 import com.frugalbasketer.entities.UserEntity;
 import com.frugalbasketer.model.requestmodel.dashboard.DashAdminRegistrationRequestModel;
@@ -52,6 +53,20 @@ public class AdminServiceImpl implements AdminService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<AdminEntity> getAllAdminsForTerm(String term, String searchFor) {
+
+        var searchTermIn = searchFor.toLowerCase();
+
+        return switch (searchTermIn) {
+            case StringConstants.FIRST_NAME -> adminRepository.findAllByFirstNameContains(term);
+            case StringConstants.LAST_NAME -> adminRepository.findAllByLastNameContains(term);
+            case StringConstants.MOBILE_NUMBER -> adminRepository.findAllByMobNumContains(term);
+            case StringConstants.EMAIL -> adminRepository.findAllByEmailContains(term);
+            default -> null;
+        };
     }
 
     @Override

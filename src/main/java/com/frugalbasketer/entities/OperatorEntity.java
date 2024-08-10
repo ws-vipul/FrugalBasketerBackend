@@ -1,5 +1,4 @@
 package com.frugalbasketer.entities;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,28 +8,36 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "seller_logs")
-public class SellersLogsEntity {
-
+@Entity
+@Table(name = "operators")
+public class OperatorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    private int sellerId;
+    private String firstName;
     @Column
-    private String action;
+    private String lastName;
     @Column
-    private String log;
+    private String email;
     @Column
-    private String reason;
+    private String mobNum;
     @Column
-    private String logDateTime;
-
+    private String shopName;
+    @Column
+    private String shopAddress;
+    @Column
+    private String city;
+    @Column
+    private String password;
+    @Column
+    private String operatorStatus;
 }

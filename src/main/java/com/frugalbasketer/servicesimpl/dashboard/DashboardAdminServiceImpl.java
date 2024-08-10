@@ -1,10 +1,13 @@
 package com.frugalbasketer.servicesimpl.dashboard;
 
+import com.frugalbasketer.Dto.AdminDetailsDto;
 import com.frugalbasketer.constants.StringConstants;
 import com.frugalbasketer.entities.AdminEntity;
 import com.frugalbasketer.entities.AdminLogsEntity;
 import com.frugalbasketer.model.requestmodel.dashboard.DashAdminRegistrationRequestModel;
 import com.frugalbasketer.model.requestmodel.dashboard.DashDeleteAdminRequestModel;
+import com.frugalbasketer.model.requestmodel.dashboard.DashSearchedAdminRequestModel;
+import com.frugalbasketer.model.requestmodel.dashboard.DashUpdateAdminRequestModel;
 import com.frugalbasketer.model.responsemodel.ResponseModel;
 import com.frugalbasketer.services.AdminLogsService;
 import com.frugalbasketer.services.AdminService;
@@ -48,6 +51,39 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
     }
 
     @Override
+    public ResponseModel updateAdmin(DashUpdateAdminRequestModel dashUpdateAdminRequestModel) {
+
+        var updateAdmin = AdminEntity.builder()
+                .id(Integer.parseInt(dashUpdateAdminRequestModel.getAdminId()))
+                .firstName(dashUpdateAdminRequestModel.getFirstName())
+                .lastName(dashUpdateAdminRequestModel.getLastName())
+                .email(dashUpdateAdminRequestModel.getEmail())
+                .mobNum(dashUpdateAdminRequestModel.getMobNum())
+                .password(dashUpdateAdminRequestModel.getPassword())
+                .build();
+
+        var updatedAdmin = adminService.updateAdmin(updateAdmin);
+
+        if (updatedAdmin != null) {
+            adminLogsService.saveAdminLog(AdminLogsEntity.builder()
+                    .adminId(Integer.parseInt(dashUpdateAdminRequestModel.getOperatorAdmin()))
+                    .log("updated admin with adminId : " + dashUpdateAdminRequestModel.getAdminId())
+                    .reason(StringConstants.NA)
+                    .action(StringConstants.UPDATED)
+                    .build());
+
+            return ResponseModel.builder()
+                    .status(StringConstants.SUCCESS)
+                    .message("Admin Updated Successful").build();
+        } else {
+            return ResponseModel.builder()
+                    .status(StringConstants.FAILED)
+                    .message("Technical Error in Updating Admin Account")
+                    .build();
+        }
+    }
+
+    @Override
     public ResponseModel deleteAdmin(final DashDeleteAdminRequestModel dashDeleteAdminRequestModel) {
         AdminEntity deletedUser = adminService.deleteAdmin(dashDeleteAdminRequestModel.getUserAdminId());
         if (deletedUser != null) {
@@ -72,7 +108,13 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
     @Override
     public ResponseModel fetchAllAdmin() {
         List<AdminEntity> adminEntityList = adminService.getAllAdmins();
-        if(!adminEntityList.isEmpty()) {
+        List<AdminDetailsDto> adminsDetail = adminEntityList.stream().map(adminEntity -> AdminDetailsDto.builder()
+                .firstName(adminEntity.getFirstName())
+                .lastName(adminEntity.getLastName())
+                .mobNum(adminEntity.getMobNum())
+                .email(adminEntity.getEmail()).build()).toList();
+
+        if(!adminsDetail.isEmpty()) {
             return ResponseModel.builder()
                     .status(StringConstants.SUCCESS)
                     .payload(adminEntityList)
@@ -115,5 +157,20 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
                     .message("No Admin Activity Logs Found")
                     .build();
         }
+    }
+
+    @Override
+    public ResponseModel fetchAllAdminSearchedFor(DashSearchedAdminRequestModel dashSearchedAdminRequestModel) {
+
+        List<AdminEntity> adminEntityList= adminService.getAllAdminsForTerm(dashSearchedAdminRequestModel.getTerm(),
+                dashSearchedAdminRequestModel.getSearchFor());
+
+        return adminEntityList.isEmpty() ?
+                ResponseModel.builder()
+                    .status(StringConstants.FAILED)
+                    .message("No Admin Found For Searched Term").build() :
+                ResponseModel.builder()
+                        .status(StringConstants.SUCCESS)
+                        .payload(adminEntityList).build();
     }
 }
